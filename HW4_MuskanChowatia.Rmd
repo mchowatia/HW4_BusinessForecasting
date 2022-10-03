@@ -1,0 +1,79 @@
+---
+title: "HW4_MuskanChowatia"
+author: "mc2611@rutgers.edu"
+date: "2022-10-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(fpp)
+library(fpp2)
+library(TTR)
+
+attributes(austres)
+plot(austres)
+Acf(austres)
+
+#taking the Mean of all available history
+
+mean_forecast <- meanf(austres,5)
+plot(mean_forecast)
+
+# Naive
+naive_forecast <- naive(austres,5)
+plot(naive_forecast)
+
+# Random Walk
+rwf_forecast <- rwf(austres,5)
+rwf_forecast <- rwf(austres,5, drift=TRUE)
+# Seasonal Naive
+snaive_forecast <- snaive(austres,5)
+
+# Moving Averages
+
+MA5_forecast <- ma(austres,order=5)
+MA9_forecast <- ma(austres,order=9)
+
+# plot all in a single chart
+plot(mean_forecast)
+lines(naive_forecast$mean,col="red")
+lines(rwf_forecast$mean,col="green")
+lines(snaive_forecast$mean,col="black")
+lines(MA5_forecast,col="Pink")
+lines(MA9_forecast,col="Blue")
+
+# what other attributes are there?
+attributes(naive_forecast)
+
+# Decomposition
+ets_forecast <- ets(austres)
+plot(ets_forecast)
+attributes(ets_forecast)
+ets_forecast$mse
+# HoltWinters
+HW_forecast <- HoltWinters(austres)
+plot(HW_forecast)
+SSE_Simple <- HoltWinters(austres,beta=FALSE,gamma=FALSE)
+attributes(SSE_Simple)
+plot(SSE_Simple)
+SSE_Simple$SSE
+head(SSE_Simple$fitted)
+
+#Forecast
+forecast_ets_1 <- forecast.ets(ets_forecast, h=5)
+plot(forecast_ets_1)
+forecast_ets_2 <- forecast(ets_forecast, h=5)
+plot(forecast_ets_2)
+
+
+
+
+
+
+
+
+```
